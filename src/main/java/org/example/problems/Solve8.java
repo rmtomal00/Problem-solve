@@ -1,68 +1,36 @@
 package org.example.problems;
 
-import java.util.HashMap;
-import java.util.Map;
+
 
 public class Solve8 {
     public static void main(String[] args) {
-        Solution solution = new Solution();
-        System.out.println(solution.longestPalindrome("aacabdkacaa"));
+        System.out.println(longestPalindrome("abacab"));
     }
-    static class Solution {
-        public String longestPalindrome(String s) {
-            int start = 0;
-            int end = 0;
-            for (int i = 0; i < s.length(); i++) {
-                for (int j = 0; j < i; j++) {
-                    if (s.charAt(j) != s.charAt(i-j)) {
-                        start = i;
-                    }
-                }
-
-            }
-            return null;
+    private static String expandAroundCenter(String s, int left, int right) {
+        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+            left--;
+            right++;
         }
+        return s.substring(left + 1, right);
     }
 
-    /*class Solution {
-        public String longestPalindrome(String s) {
-            if (s == null || s.length() == 0) {
-                return "";
-            }
-            String longestPalindrome = "";
-            Map<Character, Integer> map = new HashMap<>();
-            for (int i = 0; i < s.length(); i++) {
-                char c = s.charAt(i);
-                if (longestPalindrome.isEmpty()) {
-                    longestPalindrome = String.valueOf(c);
-                }
-                if(!map.containsKey(c)) {
-                    map.put(c, i);
-                }else {
-                    int start = map.get(c);
-                    String sub = s.substring(start, i+1);
-                    boolean isPalindrome = false;
-                    for (int j = 0; j < sub.length()/2; j++) {
-                        if (sub.charAt(j) != c) {
-                            map.put(c, i);
-                        }
-                        if (sub.charAt(j) != sub.charAt(sub.length()-1 - j)) {
-                            map.put(c, i);
-                            isPalindrome = false;
-                            break;
-                        }else {
-                            isPalindrome = true;
-                        }
-                    }
-                    if(isPalindrome) {
-                        if (longestPalindrome.length() < sub.length()) {
-                            longestPalindrome = sub;
-                        }
-                    }
-                }
-            }
-
-            return longestPalindrome;
+    public static String longestPalindrome(String s) {
+        if (s == null || s.length() < 1) {
+            return "";
         }
-    }*/
+
+        String longest = "";
+        for (int i = 0; i < s.length(); i++) {
+            String oddPalindrome = expandAroundCenter(s, i, i);
+            String evenPalindrome = expandAroundCenter(s, i, i + 1);
+            if (oddPalindrome.length() > longest.length()) {
+                longest = oddPalindrome;
+            }
+            if (evenPalindrome.length() > longest.length()) {
+                longest = evenPalindrome;
+            }
+        }
+
+        return longest;
+    }
 }
